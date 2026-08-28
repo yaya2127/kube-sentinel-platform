@@ -11,9 +11,9 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@500;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   
-  <!-- Stylesheets (Cache-busted v2.2) -->
-  <link rel="stylesheet" href="css/main.css?v=2.2">
-  <link rel="stylesheet" href="css/components.css?v=2.2">
+  <!-- Stylesheets (Cache-busted v2.3) -->
+  <link rel="stylesheet" href="css/main.css?v=2.3">
+  <link rel="stylesheet" href="css/components.css?v=2.3">
   
   <style>
     /* Critical Inline Theme Override to Bypass Browser Cache */
@@ -52,18 +52,30 @@
       </div>
       <div class="brand-text">
         <div class="title">KUBE-Sentinel v2.4 Mesh Console</div>
-        <div class="sub">Production-US-East-1 — Kubernetes v1.30.2 Cluster</div>
+        <div class="sub">
+          <select id="select-k8s-env" style="background:#f1f5f9; border:1px solid #cbd5e1; border-radius:4px; padding:2px 6px; font-family:var(--font-mono); font-size:0.72rem; font-weight:700; color:#0284c7; cursor:pointer;">
+            <option value="prod">Production-US-East-1 (k8s-v1.30.2)</option>
+            <option value="staging">Staging-EU-West-1 (k8s-v1.30.1)</option>
+            <option value="dr">Disaster-Recovery-AP-South-1</option>
+          </select>
+        </div>
       </div>
     </div>
 
     <div class="header-status">
       <div class="status-badge">
         <span class="pulse-dot"></span>
-        <span>CLUSTER HEALTHY (13 REPLICAS ONLINE)</span>
+        <span id="lbl-header-status">CLUSTER HEALTHY (13 REPLICAS ONLINE)</span>
       </div>
     </div>
 
     <div class="header-actions">
+      <button class="btn-k8s" id="btn-toggle-audio" title="Toggle Web Audio Feedback">
+        <i class="fas fa-volume-high" id="icon-audio"></i> Audio On
+      </button>
+      <button class="btn-k8s" id="btn-open-terminal">
+        <i class="fas fa-terminal" style="color:#0284c7;"></i> kubectl CLI
+      </button>
       <button class="btn-k8s btn-primary" id="btn-deploy-modal">
         <i class="fas fa-plus"></i> + Deploy Pod
       </button>
@@ -98,7 +110,7 @@
           <canvas id="topology-canvas"></canvas>
           <div class="topology-grid-overlay"></div>
           <div class="topology-info-overlay">
-            <span>NAMESPACE: production</span>
+            <span id="overlay-namespace">NAMESPACE: production</span>
             <span>INGRESS: Envoy v1.28</span>
             <span>MESH: Istio / Cilium eBPF</span>
           </div>
@@ -187,7 +199,7 @@
         <div class="panel-header">
           <div class="panel-title">
             <i class="fas fa-terminal" style="color:var(--purple-ebpf);"></i>
-            <span>REAL-TIME eBPF NETWORK PACKET SPAN TRACE LOG</span>
+            <span>REAL-TIME eBPF NETWORK PACKET SPAN TRACE LOG (Click Line to Inspect)</span>
           </div>
         </div>
         <div class="trace-log-box" id="trace-log-box">
@@ -276,6 +288,41 @@
     </aside>
 
   </main>
+
+  <!-- Interactive kubectl CLI Terminal Drawer -->
+  <div id="terminal-backdrop" style="display:none; position:fixed; bottom:0; left:0; width:100%; height:320px; background:#0f172a; border-top:2px solid #0284c7; z-index:2500; font-family:var(--font-mono); color:#f8fafc; flex-direction:column; box-shadow:0 -10px 40px rgba(0,0,0,0.4);">
+    <div style="display:flex; justify-content:space-between; align-items:center; background:#1e293b; padding:8px 18px; border-bottom:1px solid #334155;">
+      <div style="font-size:0.82rem; font-weight:700; color:#38bdf8; display:flex; align-items:center; gap:8px;">
+        <i class="fas fa-terminal"></i> kubectl Interactive CLI Console (Type 'help' or 'kubectl get pods')
+      </div>
+      <button id="btn-close-terminal" style="background:none; border:none; color:#94a3b8; font-size:1rem; cursor:pointer;"><i class="fas fa-xmark"></i></button>
+    </div>
+    <div id="terminal-output-box" style="flex:1; padding:12px 18px; overflow-y:auto; font-size:0.8rem; line-height:1.6;">
+      <div><span style="color:#38bdf8;">KUBE-Sentinel kubectl v1.30.2 CLI Ready.</span> Type <span style="color:#f59e0b;">'help'</span> to view available commands.</div>
+    </div>
+    <div style="display:flex; align-items:center; background:#020617; padding:8px 18px; border-top:1px solid #334155;">
+      <span style="color:#10b981; font-weight:700; margin-right:8px;">admin@k8s-sentinel:~$</span>
+      <input type="text" id="terminal-input" placeholder="kubectl get pods" style="flex:1; background:none; border:none; color:#ffffff; font-family:var(--font-mono); font-size:0.85rem; outline:none;">
+    </div>
+  </div>
+
+  <!-- Interactive eBPF Packet Inspector Modal -->
+  <div id="inspector-backdrop" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(15,23,42,0.6); backdrop-filter:blur(4px); z-index:3000; align-items:center; justify-content:center;">
+    <div style="background:#ffffff; border-radius:16px; padding:28px; width:520px; border:1px solid #e2e8f0; box-shadow:0 20px 50px rgba(0,0,0,0.15);">
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:14px;">
+        <h3 style="font-size:1.05rem; font-weight:800; color:#0f172a;"><i class="fas fa-microchip" style="color:#7c3aed;"></i> eBPF Network Packet Inspection</h3>
+        <button id="btn-close-inspector" style="background:none; border:none; font-size:1.2rem; cursor:pointer; color:#64748b;"><i class="fas fa-xmark"></i></button>
+      </div>
+      
+      <div id="inspector-content-box" style="background:#0f172a; color:#f8fafc; border-radius:10px; padding:14px; font-family:var(--font-mono); font-size:0.78rem; line-height:1.6; max-height:240px; overflow-y:auto; margin-bottom:16px;">
+        <!-- Dynamic Packet Data -->
+      </div>
+
+      <button id="btn-replay-packet" class="btn-k8s btn-primary" style="width:100%; justify-content:center; padding:10px; font-size:0.85rem;">
+        <i class="fas fa-rotate"></i> Replay gRPC Packet Request Across Service Mesh
+      </button>
+    </div>
+  </div>
 
   <!-- Deploy New Pod Modal -->
   <div id="deploy-modal-backdrop" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(15,23,42,0.6); backdrop-filter:blur(4px); z-index:3000; align-items:center; justify-content:center;">
