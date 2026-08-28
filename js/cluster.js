@@ -1,5 +1,5 @@
 /* ==========================================================================
-   KUBE-Sentinel — Interactive Kubernetes Cluster DAG Topology Canvas
+   KUBE-Sentinel — Interactive Kubernetes Cluster DAG Topology Canvas (Light Theme)
    ========================================================================== */
 
 class ClusterTopology {
@@ -13,12 +13,12 @@ class ClusterTopology {
 
     // K8s Cluster Pod Node Positions
     this.nodes = [
-      { id: 'ingress', name: 'K8s Ingress Controller', x: 0.15, y: 0.5, status: 'healthy', color: '#38bdf8' },
-      { id: 'auth', name: 'auth-service (2/2)', x: 0.38, y: 0.28, status: 'healthy', color: '#10b981' },
-      { id: 'payment', name: 'payment-gateway (3/3)', x: 0.38, y: 0.72, status: 'healthy', color: '#10b981' },
-      { id: 'order', name: 'order-processor (4/4)', x: 0.65, y: 0.35, status: 'healthy', color: '#10b981' },
-      { id: 'redis', name: 'redis-cluster (3/3)', x: 0.85, y: 0.25, status: 'healthy', color: '#a855f7' },
-      { id: 'db', name: 'postgres-primary (1/1)', x: 0.85, y: 0.70, status: 'healthy', color: '#3b82f6' }
+      { id: 'ingress', name: 'K8s Ingress Controller', x: 0.15, y: 0.5, status: 'healthy', color: '#0284c7' },
+      { id: 'auth', name: 'auth-service (2/2)', x: 0.38, y: 0.28, status: 'healthy', color: '#059669' },
+      { id: 'payment', name: 'payment-gateway (3/3)', x: 0.38, y: 0.72, status: 'healthy', color: '#059669' },
+      { id: 'order', name: 'order-processor (4/4)', x: 0.65, y: 0.35, status: 'healthy', color: '#059669' },
+      { id: 'redis', name: 'redis-cluster (3/3)', x: 0.85, y: 0.25, status: 'healthy', color: '#7c3aed' },
+      { id: 'db', name: 'postgres-primary (1/1)', x: 0.85, y: 0.70, status: 'healthy', color: '#2563eb' }
     ];
 
     this.edges = [
@@ -48,7 +48,7 @@ class ClusterTopology {
     const node = this.nodes.find(n => n.id === podId);
     if (node) {
       node.status = status;
-      node.color = status === 'crashed' ? '#ef4444' : status === 'degraded' ? '#f59e0b' : '#10b981';
+      node.color = status === 'crashed' ? '#dc2626' : status === 'degraded' ? '#d97706' : '#059669';
     }
   }
 
@@ -64,12 +64,13 @@ class ClusterTopology {
         toY: toNode.y * this.height,
         progress: 0,
         speed: 0.015 + Math.random() * 0.01,
-        color: fromNode.status === 'crashed' || toNode.status === 'crashed' ? '#ef4444' : '#38bdf8'
+        color: fromNode.status === 'crashed' || toNode.status === 'crashed' ? '#dc2626' : '#0284c7'
       });
     }
   }
 
   draw() {
+    // Clear Canvas with crisp light studio background
     this.ctx.clearRect(0, 0, this.width, this.height);
 
     // Draw Topology Connections (Edges)
@@ -85,7 +86,7 @@ class ClusterTopology {
 
       this.ctx.beginPath();
       this.ctx.lineWidth = 2;
-      this.ctx.strokeStyle = fromNode.status === 'crashed' || toNode.status === 'crashed' ? 'rgba(239, 68, 68, 0.4)' : 'rgba(56, 189, 248, 0.2)';
+      this.ctx.strokeStyle = fromNode.status === 'crashed' || toNode.status === 'crashed' ? 'rgba(220, 38, 38, 0.35)' : 'rgba(2, 132, 199, 0.25)';
       this.ctx.moveTo(fx, fy);
       this.ctx.lineTo(tx, ty);
       this.ctx.stroke();
@@ -107,9 +108,9 @@ class ClusterTopology {
       const py = p.fromY + (p.toY - p.fromY) * p.progress;
 
       this.ctx.beginPath();
-      this.ctx.arc(px, py, 4, 0, Math.PI * 2);
+      this.ctx.arc(px, py, 4.5, 0, Math.PI * 2);
       this.ctx.fillStyle = p.color;
-      this.ctx.shadowBlur = 8;
+      this.ctx.shadowBlur = 6;
       this.ctx.shadowColor = p.color;
       this.ctx.fill();
     }
@@ -119,25 +120,25 @@ class ClusterTopology {
       const nx = node.x * this.width;
       const ny = node.y * this.height;
 
-      // Outer Glow Pulse
+      // Outer Ring Pulse
       this.ctx.beginPath();
       this.ctx.arc(nx, ny, 24, 0, Math.PI * 2);
-      this.ctx.fillStyle = node.status === 'crashed' ? 'rgba(239, 68, 68, 0.15)' : 'rgba(56, 189, 248, 0.1)';
+      this.ctx.fillStyle = node.status === 'crashed' ? 'rgba(220, 38, 38, 0.12)' : 'rgba(2, 132, 199, 0.08)';
       this.ctx.fill();
 
       // Core Node Circle
       this.ctx.beginPath();
-      this.ctx.arc(nx, ny, 14, 0, Math.PI * 2);
+      this.ctx.arc(nx, ny, 15, 0, Math.PI * 2);
       this.ctx.fillStyle = node.color;
-      this.ctx.shadowBlur = 12;
+      this.ctx.shadowBlur = 10;
       this.ctx.shadowColor = node.color;
       this.ctx.fill();
 
-      // Node Label
-      this.ctx.font = '11px "JetBrains Mono", monospace';
-      this.ctx.fillStyle = '#f8fafc';
+      // Node Label (High-contrast slate dark font)
+      this.ctx.font = '700 12px "JetBrains Mono", monospace';
+      this.ctx.fillStyle = '#0f172a';
       this.ctx.textAlign = 'center';
-      this.ctx.fillText(node.name, nx, ny + 32);
+      this.ctx.fillText(node.name, nx, ny + 34);
     });
 
     this.animId = requestAnimationFrame(() => this.draw());

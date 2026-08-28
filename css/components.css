@@ -1,33 +1,33 @@
 /* ==========================================================================
-   KUBE-Sentinel — Component Styles (Topology Canvas, Pod Grid, Chaos Controls)
+   KUBE-Sentinel — Component Styles (Crisp Light Theme Components)
    ========================================================================== */
 
 .panel {
   background: var(--bg-panel);
   border: 1px solid var(--border-slate);
-  border-radius: 14px;
-  padding: 20px;
-  backdrop-filter: blur(16px);
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
-  transition: border-color 0.2s ease;
+  border-radius: 16px;
+  padding: 22px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04);
+  transition: all 0.2s ease;
 }
 .panel:hover {
-  border-color: rgba(148, 163, 184, 0.4);
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.08);
+  border-color: #cbd5e1;
 }
 
 .panel-header {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin-bottom: 14px;
-  padding-bottom: 12px;
-  border-bottom: 1px solid rgba(51, 65, 85, 0.4);
+  margin-bottom: 16px;
+  padding-bottom: 14px;
+  border-bottom: 1px solid #f1f5f9;
 }
 
 .panel-title {
-  font-size: 0.95rem;
-  font-weight: 700;
-  color: #fff;
+  font-size: 0.98rem;
+  font-weight: 800;
+  color: #0f172a;
   display: flex;
   align-items: center;
   gap: 10px;
@@ -41,12 +41,12 @@
 .canvas-wrapper {
   position: relative;
   width: 100%;
-  height: 320px;
-  background: #020617;
-  border-radius: 10px;
-  border: 1px solid rgba(56, 189, 248, 0.25);
+  height: 340px;
+  background: #ffffff;
+  border-radius: 12px;
+  border: 1px solid #cbd5e1;
   overflow: hidden;
-  box-shadow: inset 0 0 20px rgba(0, 0, 0, 0.8);
+  box-shadow: inset 0 0 15px rgba(0, 0, 0, 0.02);
 }
 
 #topology-canvas {
@@ -61,8 +61,8 @@
   pointer-events: none;
   background-size: 30px 30px;
   background-image: 
-    linear-gradient(to right, rgba(56, 189, 248, 0.04) 1px, transparent 1px),
-    linear-gradient(to bottom, rgba(56, 189, 248, 0.04) 1px, transparent 1px);
+    linear-gradient(to right, rgba(2, 132, 199, 0.06) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(2, 132, 199, 0.06) 1px, transparent 1px);
 }
 
 .topology-info-overlay {
@@ -73,10 +73,11 @@
   color: var(--k8s-blue);
   display: flex;
   gap: 16px;
-  background: rgba(2, 6, 23, 0.75);
-  padding: 4px 10px;
-  border-radius: 6px;
-  border: 1px solid rgba(56, 189, 248, 0.2);
+  background: rgba(255, 255, 255, 0.95);
+  padding: 6px 14px;
+  border-radius: 8px;
+  border: 1px solid #e2e8f0;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
 }
 
 /* Cluster Metrics Grid */
@@ -88,16 +89,18 @@
 }
 
 .metric-card {
-  background: rgba(15, 23, 42, 0.7);
+  background: #ffffff;
   border: 1px solid var(--border-slate);
-  border-radius: 12px;
-  padding: 16px;
+  border-radius: 14px;
+  padding: 18px;
   position: relative;
   overflow: hidden;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.03);
   transition: transform 0.2s ease, border-color 0.2s ease;
 }
 .metric-card:hover {
   transform: translateY(-2px);
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.06);
 }
 
 .metric-card.pods { border-left: 4px solid var(--k8s-blue); }
@@ -113,7 +116,7 @@
 }
 .metric-label {
   font-size: 0.75rem;
-  font-weight: 700;
+  font-weight: 800;
   text-transform: uppercase;
   color: var(--text-muted);
   letter-spacing: 0.05em;
@@ -126,10 +129,10 @@
 }
 .metric-value {
   font-family: var(--font-mono);
-  font-size: 2.1rem;
+  font-size: 2.2rem;
   font-weight: 800;
   line-height: 1;
-  color: #fff;
+  color: #0f172a;
 }
 .metric-unit {
   font-size: 0.78rem;
@@ -146,103 +149,107 @@
 }
 
 .chaos-card {
-  background: rgba(2, 6, 23, 0.6);
+  background: #f8fafc;
   border: 1px solid var(--border-slate);
-  border-radius: 10px;
-  padding: 12px;
+  border-radius: 12px;
+  padding: 14px;
   cursor: pointer;
   transition: all 0.2s ease;
 }
 .chaos-card:hover {
   border-color: var(--warning-amber);
-  background: rgba(245, 158, 11, 0.08);
+  background: #fffbeb;
+  transform: translateY(-1px);
 }
 .chaos-card.active {
   border-color: var(--crash-red);
-  background: rgba(239, 68, 68, 0.12);
+  background: #fef2f2;
 }
 
 .chaos-title {
-  font-size: 0.82rem;
-  font-weight: 700;
-  color: #fff;
+  font-size: 0.85rem;
+  font-weight: 800;
+  color: #0f172a;
   display: flex;
   align-items: center;
   gap: 8px;
 }
 .chaos-desc {
-  font-size: 0.72rem;
+  font-size: 0.74rem;
   color: var(--text-muted);
   margin-top: 4px;
+  line-height: 1.4;
 }
 
 /* Pod Mesh Grid */
 .pod-mesh-grid {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
-  gap: 10px;
+  gap: 12px;
   margin-top: 10px;
 }
 
 .pod-node {
-  background: rgba(15, 23, 42, 0.7);
+  background: #ffffff;
   border: 1px solid var(--border-slate);
-  border-radius: 8px;
-  padding: 10px;
-  font-size: 0.78rem;
+  border-radius: 10px;
+  padding: 12px;
+  font-size: 0.8rem;
   transition: all 0.2s ease;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.03);
 }
 .pod-node.running {
   border-left: 4px solid var(--healthy-green);
 }
 .pod-node.crashed {
   border-left: 4px solid var(--crash-red);
-  background: rgba(239, 68, 68, 0.1);
+  background: #fef2f2;
   animation: pulse-crash 1.5s infinite;
 }
 
 @keyframes pulse-crash {
-  0%, 100% { border-color: rgba(239, 68, 68, 0.4); }
+  0%, 100% { border-color: rgba(220, 38, 38, 0.4); }
   50% { border-color: var(--crash-red); }
 }
 
 .pod-name {
   font-family: var(--font-mono);
-  font-weight: 700;
-  color: #fff;
+  font-weight: 800;
+  color: #0f172a;
 }
 .pod-status-text {
-  font-size: 0.72rem;
+  font-size: 0.74rem;
   color: var(--text-muted);
-  margin-top: 2px;
+  margin-top: 4px;
 }
 
 /* eBPF Packet Trace Log */
 .trace-log-box {
-  background: #020617;
-  border: 1px solid var(--border-slate);
-  border-radius: 8px;
-  padding: 12px;
+  background: #0f172a;
+  border: 1px solid #334155;
+  border-radius: 10px;
+  padding: 14px;
   font-family: var(--font-mono);
-  font-size: 0.75rem;
-  height: 160px;
+  font-size: 0.78rem;
+  height: 170px;
   overflow-y: auto;
   margin-top: 10px;
+  box-shadow: inset 0 2px 8px rgba(0,0,0,0.5);
 }
 
 .trace-line {
   margin-bottom: 4px;
-  color: var(--text-muted);
+  color: #94a3b8;
 }
-.trace-line .span-ok { color: var(--healthy-green); }
-.trace-line .span-warn { color: var(--warning-amber); }
-.trace-line .span-err { color: var(--crash-red); }
+.trace-line .span-ok { color: #34d399; font-weight:700; }
+.trace-line .span-warn { color: #fbbf24; font-weight:700; }
+.trace-line .span-err { color: #f87171; font-weight:700; }
 
 /* Toasts */
 .toast-container {
   position: fixed;
-  bottom: 24px;
-  right: 24px;
+  bottom: 28px;
+  right: 28px;
   z-index: 2000;
   display: flex;
   flex-direction: column;
@@ -250,14 +257,15 @@
 }
 
 .toast {
-  background: rgba(15, 23, 42, 0.95);
+  background: #ffffff;
   border: 1px solid var(--border-k8s);
-  border-left: 4px solid var(--k8s-blue);
-  border-radius: 10px;
-  padding: 12px 18px;
-  color: #fff;
-  font-size: 0.82rem;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+  border-left: 5px solid var(--k8s-blue);
+  border-radius: 12px;
+  padding: 14px 20px;
+  color: #0f172a;
+  font-size: 0.85rem;
+  font-weight: 700;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.12);
   display: flex;
   align-items: center;
   gap: 12px;
