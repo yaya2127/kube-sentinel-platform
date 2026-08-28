@@ -11,9 +11,36 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@500;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   
-  <!-- Stylesheets -->
-  <link rel="stylesheet" href="css/main.css">
-  <link rel="stylesheet" href="css/components.css">
+  <!-- Stylesheets (Cache-busted v2.1) -->
+  <link rel="stylesheet" href="css/main.css?v=2.1">
+  <link rel="stylesheet" href="css/components.css?v=2.1">
+  
+  <style>
+    /* Critical Inline Theme Override to Bypass Browser CSS Cache */
+    body {
+      background-color: #f8fafc !important;
+      color: #0f172a !important;
+    }
+    .k8s-header {
+      background: #ffffff !important;
+      border-bottom: 1px solid #e2e8f0 !important;
+    }
+    .brand-text .title {
+      color: #0f172a !important;
+    }
+    .panel, .metric-card, .chaos-card, .pod-node {
+      background: #ffffff !important;
+      border-color: #e2e8f0 !important;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04) !important;
+    }
+    .panel-title, .metric-value, .chaos-title, .pod-name {
+      color: #0f172a !important;
+    }
+    .canvas-wrapper {
+      background: #ffffff !important;
+      border-color: #cbd5e1 !important;
+    }
+  </style>
 </head>
 <body>
 
