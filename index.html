@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>KUBE-Sentinel — Autonomous Kubernetes Mesh & Chaos Resilience Engine</title>
+  
+  <!-- Fonts & Icons -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@500;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  
+  <!-- Stylesheets -->
+  <link rel="stylesheet" href="css/main.css">
+  <link rel="stylesheet" href="css/components.css">
+</head>
+<body>
+
+  <!-- K8s Console Header -->
+  <header class="k8s-header">
+    <div class="brand-section">
+      <div class="brand-icon">
+        <i class="fas fa-dharmachakra"></i>
+      </div>
+      <div class="brand-text">
+        <div class="title">KUBE-Sentinel v2.4 Mesh Console</div>
+        <div class="sub">Production-US-East-1 — Kubernetes v1.30.2 Cluster</div>
+      </div>
+    </div>
+
+    <div class="header-status">
+      <div class="status-badge">
+        <span class="pulse-dot"></span>
+        <span>CLUSTER HEALTHY (13 REPLICAS ONLINE)</span>
+      </div>
+    </div>
+
+    <div class="header-actions">
+      <button class="btn-k8s btn-chaos" id="btn-heal-cluster">
+        <i class="fas fa-kit-medical"></i> Heal Cluster
+      </button>
+      <button class="btn-k8s btn-primary" id="btn-export-audit">
+        <i class="fas fa-file-shield"></i> Export Compliance Audit
+      </button>
+    </div>
+  </header>
+
+  <!-- Main Application Grid -->
+  <main class="app-container">
+    
+    <!-- Left Column: Cluster DAG Topology & eBPF Trace Log -->
+    <section class="main-cluster">
+      
+      <!-- Cluster Topology Canvas Panel -->
+      <div class="panel">
+        <div class="panel-header">
+          <div class="panel-title">
+            <i class="fas fa-network-wired"></i>
+            <span>KUBERNETES MICROSERVICE DAG TOPOLOGY CANVAS</span>
+          </div>
+          <div style="font-family: var(--font-mono); font-size: 0.8rem; color: var(--text-muted);">
+            eBPF Packet Span Tracing
+          </div>
+        </div>
+
+        <div class="canvas-wrapper">
+          <canvas id="topology-canvas"></canvas>
+          <div class="topology-grid-overlay"></div>
+          <div class="topology-info-overlay">
+            <span>NAMESPACE: production</span>
+            <span>INGRESS: Envoy v1.28</span>
+            <span>MESH: Istio / Cilium eBPF</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Cluster Metrics Cards Grid -->
+      <div class="metrics-grid">
+        <!-- Total Pod Replicas -->
+        <div class="metric-card pods">
+          <div class="metric-header">
+            <span class="metric-label">Active Pod Replicas</span>
+            <i class="fas fa-cubes metric-icon" style="color:var(--k8s-blue);"></i>
+          </div>
+          <div class="metric-value-row">
+            <span class="metric-value" id="val-total-pods">13</span>
+            <span class="metric-unit">Pods</span>
+          </div>
+          <div class="vital-status" style="color:var(--healthy-green); font-size:0.72rem; margin-top:6px;">
+            <i class="fas fa-check"></i> 100% Desired Replicas
+          </div>
+        </div>
+
+        <!-- p99 Latency Card -->
+        <div class="metric-card latency">
+          <div class="metric-header">
+            <span class="metric-label">p99 Mesh Latency</span>
+            <i class="fas fa-bolt metric-icon" style="color:var(--purple-ebpf);"></i>
+          </div>
+          <div class="metric-value-row">
+            <span class="metric-value" id="val-p99-latency">5.7ms</span>
+          </div>
+          <div class="vital-status" style="color:var(--purple-ebpf); font-size:0.72rem; margin-top:6px;">
+            <i class="fas fa-check"></i> Sub-10ms SLA Target
+          </div>
+        </div>
+
+        <!-- SLA Uptime Card -->
+        <div class="metric-card uptime">
+          <div class="metric-header">
+            <span class="metric-label">Cluster SLA Uptime</span>
+            <i class="fas fa-shield-halved metric-icon" style="color:var(--healthy-green);"></i>
+          </div>
+          <div class="metric-value-row">
+            <span class="metric-value" id="val-uptime">99.99%</span>
+          </div>
+          <div class="vital-status" style="color:var(--healthy-green); font-size:0.72rem; margin-top:6px;">
+            <i class="fas fa-check"></i> High Availability
+          </div>
+        </div>
+
+        <!-- Active Chaos Card -->
+        <div class="metric-card chaos">
+          <div class="metric-header">
+            <span class="metric-label">Active Chaos Exp</span>
+            <i class="fas fa-biohazard metric-icon" style="color:var(--warning-amber);"></i>
+          </div>
+          <div class="metric-value-row">
+            <span class="metric-value" id="val-active-chaos" style="font-size:1.6rem;">NONE</span>
+          </div>
+          <div class="vital-status" style="color:var(--warning-amber); font-size:0.72rem; margin-top:6px;">
+            <i class="fas fa-info-circle"></i> Chaos Monkey Ready
+          </div>
+        </div>
+      </div>
+
+      <!-- eBPF Packet Trace Feed -->
+      <div class="panel" style="margin-top: 20px;">
+        <div class="panel-header">
+          <div class="panel-title">
+            <i class="fas fa-terminal" style="color:var(--purple-ebpf);"></i>
+            <span>REAL-TIME eBPF NETWORK PACKET SPAN TRACE LOG</span>
+          </div>
+        </div>
+        <div class="trace-log-box" id="trace-log-box">
+          <!-- Dynamically Pushed Trace Lines -->
+        </div>
+      </div>
+    </section>
+
+    <!-- Right Column: Chaos Monkey Experiments & Pod Mesh Status -->
+    <aside class="sidebar-cluster">
+      
+      <!-- Chaos Monkey Experiments Selector -->
+      <div class="panel">
+        <div class="panel-header">
+          <div class="panel-title">
+            <i class="fas fa-fire-flame-curved" style="color:var(--warning-amber);"></i>
+            <span>CHAOS MONKEY RESILIENCE EXPERIMENTS</span>
+          </div>
+        </div>
+
+        <div class="chaos-experiments-grid">
+          <div class="chaos-card" data-experiment="pod-kill">
+            <div class="chaos-title"><i class="fas fa-skull" style="color:#ef4444;"></i> Pod Kill Switch</div>
+            <div class="chaos-desc">Simulate SIGKILL on payment-gateway pods to test K8s self-healing.</div>
+          </div>
+          <div class="chaos-card" data-experiment="latency-spike">
+            <div class="chaos-title"><i class="fas fa-clock" style="color:#f59e0b;"></i> Latency (+180ms)</div>
+            <div class="chaos-desc">Inject artificial network delay across gRPC microservice mesh.</div>
+          </div>
+          <div class="chaos-card" data-experiment="packet-loss">
+            <div class="chaos-title"><i class="fas fa-wifi" style="color:#a855f7;"></i> Packet Loss (30%)</div>
+            <div class="chaos-desc">Drop 30% TCP network packets to verify retry & circuit breakers.</div>
+          </div>
+          <div class="chaos-card" data-experiment="cpu-burn">
+            <div class="chaos-title"><i class="fas fa-microchip" style="color:#38bdf8;"></i> CPU Stress (99%)</div>
+            <div class="chaos-desc">Simulate CPU throttling & test Horizontal Pod Autoscaling (HPA).</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- K8s Pod Mesh Status Grid -->
+      <div class="panel" style="margin-top: 20px;">
+        <div class="panel-header">
+          <div class="panel-title">
+            <i class="fas fa-cubes"></i>
+            <span>MICROSERVICE POD REPLICA MESH</span>
+          </div>
+        </div>
+
+        <div class="pod-mesh-grid" id="pod-mesh-grid">
+          <!-- Dynamically Rendered Pod Nodes -->
+        </div>
+      </div>
+
+    </aside>
+
+  </main>
+
+  <!-- Toast Notification Container -->
+  <div class="toast-container" id="toast-container"></div>
+
+  <!-- Scripts -->
+  <script src="js/cluster.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>
